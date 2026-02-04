@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class AppWidgets {
-  static headlineTextStyle(double size) {
+  static headlineTextStyle(double size, {Color? colors}) {
     return TextStyle(
-      color: Colors.black,
+      color: colors ?? Colors.black,
       fontSize: size,
       fontFamily: "Poppins",
     );

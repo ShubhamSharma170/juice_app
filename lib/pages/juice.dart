@@ -1,13 +1,15 @@
+// ignore_for_file: must_be_immutable
+
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:juice_delivery_app/services/firebase_method.dart';
 import 'package:juice_delivery_app/services/shared_preference.dart';
 import 'package:juice_delivery_app/services/support_widget.dart';
-import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 class JuicePage extends StatefulWidget {
-  const JuicePage({super.key});
+  String type;
+  JuicePage({required this.type, super.key});
 
   @override
   State<JuicePage> createState() => _JuicePageState();
@@ -30,6 +32,7 @@ class _JuicePageState extends State<JuicePage> {
 
   @override
   initState() {
+    log(widget.type);
     getDataOnLoad();
     super.initState();
   }
@@ -47,12 +50,15 @@ class _JuicePageState extends State<JuicePage> {
       "UserName": userName,
       "Amount": "50",
       "Delivered": "false",
+      "type": widget.type,
     };
 
-    int updatePoints = int.parse(points!) + 20;
+    int updatedPoints = int.parse(points!) + 20;
+    SharedPreferenceClass.saveUserPoint(updatedPoints.toString());
+    log("updated points is $updatedPoints");
     await FirebaseMethod.addUserOrder(id!, orderData);
     await FirebaseMethod.addAdminOrder(orderData);
-    await FirebaseMethod.updateUserPoints(id!, updatePoints.toString());
+    await FirebaseMethod.updateUserPoints(id!, updatedPoints.toString());
   }
 
   final List<String> fruits = [
@@ -217,7 +223,7 @@ class _JuicePageState extends State<JuicePage> {
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Container(
                 width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(  
+                decoration: BoxDecoration(
                   border: Border.all(width: 1.5),
                   borderRadius: BorderRadius.circular(12),
                 ),

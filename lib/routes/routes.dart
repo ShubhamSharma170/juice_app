@@ -14,8 +14,9 @@ class Routes {
           builder: (BuildContext context) => OnboardingPage(),
         );
       case RouteName.juicePage:
+        var arguments = settings.arguments as String;
         return MaterialPageRoute(
-          builder: (BuildContext context) => JuicePage(),
+          builder: (BuildContext context) => JuicePage(type: arguments,),
         );
       case RouteName.signup:
         return MaterialPageRoute(builder: (context) => SignUp());

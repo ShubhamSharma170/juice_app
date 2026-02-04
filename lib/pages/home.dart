@@ -122,6 +122,7 @@ class _HomePageState extends State<HomePage> {
                                         Navigator.pushNamed(
                                           context,
                                           RouteName.juicePage,
+                                          arguments: "Orange"
                                         );
                                       },
                                       child: Container(
@@ -235,6 +236,7 @@ class _HomePageState extends State<HomePage> {
                                         Navigator.pushNamed(
                                           context,
                                           RouteName.juicePage,
+                                          arguments: "Grape"
                                         );
                                       },
                                       child: Container(

@@ -27,4 +27,12 @@ class FirebaseMethod {
       "points": points,
     });
   }
+
+  static Future<Stream<QuerySnapshot>> orderSnapshot(String id) async {
+    return await FirebaseFirestore.instance
+        .collection("users")
+        .doc(id)
+        .collection("orders")
+        .snapshots();
+  }
 }
