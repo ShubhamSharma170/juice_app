@@ -35,4 +35,11 @@ class FirebaseMethod {
         .collection("orders")
         .snapshots();
   }
+
+  static Stream<QuerySnapshot<Map<String, dynamic>>> leaderBoardStream()  {
+    return  FirebaseFirestore.instance
+        .collection("users")
+        .orderBy("points", descending: true)
+        .snapshots();
+  }
 }

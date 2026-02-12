@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:juice_delivery_app/pages/home.dart';
+import 'package:juice_delivery_app/pages/leaderboard_page/leaderboard_page.dart';
 import 'package:juice_delivery_app/pages/order_page/order_page.dart';
 
 class BottomNavigationPage extends StatefulWidget {
@@ -15,7 +16,7 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
   final List _pages = [
     HomePage(),
     OrderPage(),
-    Center(child: Text("Score")),
+    LeaderboardPage(),
     Center(child: Text("Profile")),
   ];
   @override

@@ -61,6 +61,30 @@ class _JuicePageState extends State<JuicePage> {
     await FirebaseMethod.updateUserPoints(id!, updatedPoints.toString());
   }
 
+  void _paymentSuccessWithPoints() async {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(AppWidgets.customTostGreenMessage("Payment Successful "));
+    Map<String, dynamic> orderData = {
+      "SugarCount": sugarCount,
+      "SelectedFruit1": selectedFruit1,
+      "SelectedFruit2": selectedFruit2,
+      "SelectedFruit3": selectedFruit3,
+      "Notes": notesController.text,
+      "UserName": userName,
+      "Amount": "50",
+      "Delivered": "false",
+      "type": widget.type,
+    };
+
+    int updatedPoints = int.parse(points!) - 40;
+    SharedPreferenceClass.saveUserPoint(updatedPoints.toString());
+    log("updated points is $updatedPoints");
+    await FirebaseMethod.addUserOrder(id!, orderData);
+    await FirebaseMethod.addAdminOrder(orderData);
+    await FirebaseMethod.updateUserPoints(id!, updatedPoints.toString());
+  }
+
   final List<String> fruits = [
     "images/tomato.png",
     "images/watermelon.png",
@@ -238,7 +262,8 @@ class _JuicePageState extends State<JuicePage> {
                       SizedBox(height: 10),
                       GestureDetector(
                         onTap: () {
-                          _paymentSuccess();
+                          // _paymentSuccess();
+                          showPaymentOption(context);
                         },
                         child: Container(
                           width: 200,
@@ -266,6 +291,67 @@ class _JuicePageState extends State<JuicePage> {
           ],
         ),
       ),
+    );
+  }
+
+  Future<dynamic> showPaymentOption(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Choose One Option"),
+          titleTextStyle: AppWidgets.headlineTextStyle(22),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  _paymentSuccess();
+                  Navigator.pop(context);
+                },
+                child: Container(
+                  padding: EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.green,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    "Pay With Cash",
+                    style: AppWidgets.headlineTextStyle(14),
+                  ),
+                ),
+              ),
+              SizedBox(height: 10),
+              GestureDetector(
+                onTap: () {
+                  if (int.parse(points!) >= 40) {
+                    _paymentSuccessWithPoints();
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      AppWidgets.customTostRedMessage(
+                        "Not Enough Points Available",
+                      ),
+                    );
+                  }
+                  Navigator.pop(context);
+                },
+                child: Container(
+                  padding: EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.yellow,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    "Pay With Points",
+                    style: AppWidgets.headlineTextStyle(14),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          contentTextStyle: AppWidgets.headlineTextStyle(18),
+        );
+      },
     );
   }
 
