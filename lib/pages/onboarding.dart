@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:juice_delivery_app/routes/route_name.dart';
 
@@ -13,7 +14,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
   initState() {
     Future.delayed(Duration(seconds: 3), () {
       if (mounted) {
-        Navigator.pushReplacementNamed(context, RouteName.login);
+        FirebaseAuth.instance.currentUser == null ?
+        Navigator.pushReplacementNamed(context, RouteName.login):Navigator.pushReplacementNamed(context, RouteName.navigation);
       }
     });
     super.initState();
