@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:juice_delivery_app/pages/home.dart';
 import 'package:juice_delivery_app/pages/leaderboard_page/leaderboard_page.dart';
 import 'package:juice_delivery_app/pages/order_page/order_page.dart';
+import 'package:juice_delivery_app/profile/profile_page.dart';
 
 class BottomNavigationPage extends StatefulWidget {
   const BottomNavigationPage({super.key});
@@ -17,7 +18,7 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
     HomePage(),
     OrderPage(),
     LeaderboardPage(),
-    Center(child: Text("Profile")),
+    ProfilePage(),
   ];
   @override
   Widget build(BuildContext context) {

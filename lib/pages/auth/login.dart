@@ -26,9 +26,10 @@ class _LoginState extends State<Login> {
         passwordController.text.trim(),
       );
       if (success && mounted) {
+        
         Navigator.pushNamedAndRemoveUntil(
           context,
-          RouteName.home,
+          RouteName.navigation,
           (_) => false,
         );
         ScaffoldMessenger.of(
@@ -119,8 +120,12 @@ class _LoginState extends State<Login> {
                 Consumer<LoginProvider>(
                   builder: (ctx, provider, child) {
                     return InkWell(
-                      onTap: () =>
-                          provider.isLoading ? null : () => loginMethod(),
+                      onTap: provider.isLoading
+                          ? null
+                          : () {
+                              log("Pressed Login Button");
+                              loginMethod();
+                            },
                       child: Center(
                         child: Material(
                           elevation: 5,

@@ -34,7 +34,7 @@ class _OrderPageState extends State<OrderPage> {
       stream: orderStream,
       builder: (context, AsyncSnapshot snapshot) {
         return snapshot.hasData
-            ? ListView.builder(
+            ?  ListView.builder(
                 shrinkWrap: true,
                 itemCount: snapshot.data.docs.length,
                 itemBuilder: (context, index) {
@@ -143,7 +143,12 @@ class _OrderPageState extends State<OrderPage> {
                   );
                 },
               )
-            : Center(child: CircularProgressIndicator());
+            : Center(
+                child: Text(
+                  "No Order Available",
+                  style: AppWidgets.headlineTextStyle(25),
+                ),
+              );
       },
     );
   }

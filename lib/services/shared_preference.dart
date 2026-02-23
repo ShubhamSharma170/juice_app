@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferenceClass {
@@ -28,6 +30,7 @@ class SharedPreferenceClass {
   static getUserId() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     String? id = pref.getString("USERID");
+    log("id is $id");
     return id;
   }
 

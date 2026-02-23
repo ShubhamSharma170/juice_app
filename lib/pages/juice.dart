@@ -2,6 +2,7 @@
 
 import 'dart:developer';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:juice_delivery_app/services/firebase_method.dart';
 import 'package:juice_delivery_app/services/shared_preference.dart';
@@ -22,7 +23,7 @@ class _JuicePageState extends State<JuicePage> {
   TextEditingController notesController = TextEditingController();
 
   getDataOnLoad() async {
-    id = await SharedPreferenceClass.getUserId();
+    id = FirebaseAuth.instance.currentUser!.uid;
     userName = await SharedPreferenceClass.getUserName();
     points = await SharedPreferenceClass.getUserPoints();
     log(id!);
@@ -93,9 +94,9 @@ class _JuicePageState extends State<JuicePage> {
     "images/apple.png",
   ];
 
-  String? selectedFruit1;
-  String? selectedFruit2;
-  String? selectedFruit3;
+  String? selectedFruit1 = "images/tomato.png";
+  String? selectedFruit2= "images/tomato.png";
+  String? selectedFruit3 = "images/tomato.png";
 
   @override
   Widget build(BuildContext context) {

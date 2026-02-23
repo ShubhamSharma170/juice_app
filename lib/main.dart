@@ -9,6 +9,7 @@ import 'package:juice_delivery_app/pages/auth/login.dart';
 import 'package:juice_delivery_app/pages/onboarding.dart';
 import 'package:juice_delivery_app/pages/auth/signup.dart';
 import 'package:juice_delivery_app/provider/auth_provider/login_provider.dart';
+import 'package:juice_delivery_app/provider/auth_provider/signup_provider.dart';
 import 'package:juice_delivery_app/routes/routes.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,7 +19,10 @@ void main() async {
   await Firebase.initializeApp();
   runApp(
     MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => LoginProvider())],
+      providers: [
+        ChangeNotifierProvider(create: (_) => LoginProvider()),
+        ChangeNotifierProvider(create: (_) => SignupProvider()),
+      ],
       child: MyApp(),
     ),
   );

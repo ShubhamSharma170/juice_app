@@ -1,5 +1,9 @@
+import 'dart:developer';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:juice_delivery_app/services/shared_preference.dart';
 
 class LoginProvider with ChangeNotifier {
   bool _isLoading = false;
@@ -16,9 +20,20 @@ class LoginProvider with ChangeNotifier {
     try {
       UserCredential userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: pass);
+      String id = userCredential.user!.uid;
+      DocumentSnapshot snapshot = await FirebaseFirestore.instance
+          .collection("users")
+          .doc(id)
+          .get();
+      Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+      log("checking points  ${data['points']}");
+      String points = data['points'];
+      SharedPreferenceClass.saveUserPoint(points);
+      log("check user uid");
+      log(userCredential.user!.uid);
       setLoading(false);
       return true;
-    } on FirebaseAuthException catch (e) {
+    } on FirebaseAuthException {
       setLoading(false);
       rethrow;
     } catch (e) {

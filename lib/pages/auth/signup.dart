@@ -1,10 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:juice_delivery_app/provider/auth_provider/signup_provider.dart';
 import 'package:juice_delivery_app/routes/route_name.dart';
-import 'package:juice_delivery_app/services/firebase_method.dart';
-import 'package:juice_delivery_app/services/shared_preference.dart';
 import 'package:juice_delivery_app/services/support_widget.dart';
-import 'package:random_string/random_string.dart';
+import 'package:provider/provider.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -17,60 +16,31 @@ class _SignUpState extends State<SignUp> {
   TextEditingController fullNameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  bool isLoading = false;
   String? fullName, email, password;
 
   registration() async {
-    setState(() {
-      isLoading = true;
-    });
+    final signupProvider = Provider.of<SignupProvider>(listen: false, context);
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: emailController.text.trim(),
-        password: passwordController.text.trim(),
+      bool result = await signupProvider.registration(
+        emailController.text.trim(),
+        passwordController.text.trim(),
+        fullNameController.text.trim(),
       );
-      String id = randomAlphaNumeric(10);
-      Map<String, dynamic> userData = {
-        "name": fullNameController.text.trim(),
-        "email": emailController.text.trim(),
-        "id": id,
-        "points": "0",
-      };
-      await FirebaseMethod.saveUserDataToFirebase(userData, id);
-      SharedPreferenceClass.saveUserName(fullNameController.text.trim());
-      SharedPreferenceClass.saveUserId(id);
-      SharedPreferenceClass.setUserEmail(emailController.text.trim());
-      SharedPreferenceClass.saveUserPoint("0");
-      if (!mounted) return;
-      setState(() {
-        isLoading = false;
-      });
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        RouteName.home,
-        (_) => false,
-      );
-      ScaffoldMessenger.of(context).showSnackBar(
-        AppWidgets.customTostGreenMessage("Account Created SuccessFully"),
-      );
+      if (result && mounted) {
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          RouteName.navigation,
+          (_) => false,
+        );
+        ScaffoldMessenger.of(context).showSnackBar(
+          AppWidgets.customTostGreenMessage("Account Created SuccessFully"),
+        );
+      }
     } on FirebaseAuthException catch (e) {
-      if (e.code == "email-already-in-use") {
-        if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          AppWidgets.customTostRedMessage(
-            "The email address is already in use by another account.",
-          ),
-        );
-      }
-      if (e.code == "weak-password") {
-        if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          AppWidgets.customTostRedMessage("The password provided is too weak."),
-        );
-      }
-      setState(() {
-        isLoading = false;
-      });
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(AppWidgets.customTostRedMessage(e.code));
     }
   }
 
@@ -149,30 +119,32 @@ class _SignUpState extends State<SignUp> {
                   ),
                 ),
                 SizedBox(height: 60),
-                InkWell(
-                  onTap: isLoading
-                      ? () {}
-                      : () {
-                          registration();
-                        },
-                  child: Center(
-                    child: Material(
-                      elevation: 5,
-                      borderRadius: BorderRadius.circular(30),
-                      child: Container(
-                        height: 50,
-                        width: 150,
-                        decoration: BoxDecoration(
-                          color: Color(0xffb900e7),
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        child: Center(
-                          child: isLoading
-                              ? CircularProgressIndicator(color: Colors.white)
-                              : Text(
-                                  "Sign Up",
-                                  style: AppWidgets.whiteTextStyle(18),
-                                ),
+                Consumer<SignupProvider>(
+                  builder: (ctx, provider, child) => InkWell(
+                    onTap: provider.isLoading
+                        ? () {}
+                        : () {
+                            registration();
+                          },
+                    child: Center(
+                      child: Material(
+                        elevation: 5,
+                        borderRadius: BorderRadius.circular(30),
+                        child: Container(
+                          height: 50,
+                          width: 150,
+                          decoration: BoxDecoration(
+                            color: Color(0xffb900e7),
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          child: Center(
+                            child: provider.isLoading
+                                ? CircularProgressIndicator(color: Colors.white)
+                                : Text(
+                                    "Sign Up",
+                                    style: AppWidgets.whiteTextStyle(18),
+                                  ),
+                          ),
                         ),
                       ),
                     ),
