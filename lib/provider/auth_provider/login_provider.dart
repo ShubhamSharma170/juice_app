@@ -28,7 +28,9 @@ class LoginProvider with ChangeNotifier {
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
       log("checking points  ${data['points']}");
       String points = data['points'];
+      String userName = data['name'];
       SharedPreferenceClass.saveUserPoint(points);
+      SharedPreferenceClass.saveUserName(userName);
       log("check user uid");
       log(userCredential.user!.uid);
       setLoading(false);

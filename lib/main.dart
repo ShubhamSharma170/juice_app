@@ -10,6 +10,9 @@ import 'package:juice_delivery_app/pages/onboarding.dart';
 import 'package:juice_delivery_app/pages/auth/signup.dart';
 import 'package:juice_delivery_app/provider/auth_provider/login_provider.dart';
 import 'package:juice_delivery_app/provider/auth_provider/signup_provider.dart';
+import 'package:juice_delivery_app/provider/juice_page_provider/juicepage_provider.dart';
+import 'package:juice_delivery_app/provider/leaderboard_provider/leaderboard_provider.dart';
+import 'package:juice_delivery_app/provider/orderpage_provider/orderpage_provider.dart';
 import 'package:juice_delivery_app/routes/routes.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -22,6 +25,9 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => LoginProvider()),
         ChangeNotifierProvider(create: (_) => SignupProvider()),
+        ChangeNotifierProvider(create: (_) => JuicePageProvider()),
+        ChangeNotifierProvider(create: (_) => OrderpageProvider()),
+        ChangeNotifierProvider(create: (_) => LeaderboardProvider()),
       ],
       child: MyApp(),
     ),
